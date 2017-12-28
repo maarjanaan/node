@@ -1,8 +1,25 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/excuses_db');
+let db = mongoose.connection;
+
+// Check connection
+db.once('open', function(){
+    console.log('Connected to MongoDB');
+})
+
+// Check for DB errors
+db.on('error', function(err){
+    console.log(err);
+});
 
 // App
 const app = express();
+
+// Bring in Models
+let Excuse = require('./models/excuse');
 
 // Load View Engine Pug
 app.set('views', path.join(__dirname, 'views'));
@@ -10,29 +27,15 @@ app.set('view engine', 'pug');
 
 // Home Route
 app.get('/', function(req, res){
-    let excuses = [
-        {
-            id: 1,
-            title: 'Vabandus 1',
-            author: 'Maarja',
-            body: 'Koer sõi kodutöö ära'
-        },
-        {
-            id: 2,
-            title: 'Vabandus 2',
-            author: 'Keegi teine',
-            body: 'Mul on tantsutrenn samal ajal'
-        },
-        {
-            id: 3,
-            title: 'Vabandus 3',
-            author: 'Maarja',
-            body: 'Mul käelihased valutavad'
-        },
-    ];
-    res.render('index', {
-        title: 'Vabandused',
-        excuses: excuses
+    Excuse.find({}, function(err, excuses){
+        if(err){
+            console.log(err);
+        } else {
+            res.render('index', {
+                title: 'Vabandused',
+                excuses: excuses
+            });
+        }
     });
 });
 
