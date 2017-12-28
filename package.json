@@ -1,0 +1,23 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Excuses generator",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maarjanaan/node.git"
+  },
+  "author": "Maarja Naan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maarjanaan/node/issues"
+  },
+  "homepage": "https://github.com/maarjanaan/node#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "pug": "^2.0.0-rc.4"
+  }
+}
