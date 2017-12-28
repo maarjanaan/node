@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 mongoose.connect('mongodb://localhost/excuses_db');
 let db = mongoose.connection;
@@ -33,6 +36,37 @@ app.use(bodyParser.json())
 // Set Public Folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Express Session Middleware
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+}));
+
+// Express Messages Middleware
+app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Express Validator Middleware
+app.use(expressValidator({
+    errorFormatter: function(param, msg, value) {
+        var namespace = param.split('.')
+        , root    = namespace.shift()
+        , formParam = root;
+      while(namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+      }
+      return {
+        param : formParam,
+        msg   : msg,
+        value : value
+      };
+    }
+  }));
+
 // Home Route
 app.get('/', function(req, res){
     Excuse.find({}, function(err, excuses){
@@ -47,79 +81,9 @@ app.get('/', function(req, res){
     });
 });
 
-// Get Single Excuse
-app.get('/excuse/:id', function(req, res){
-    Excuse.findById(req.params.id, function(err, excuse){
-        res.render('excuse', {
-            excuse: excuse
-        });
-    })
-});
-
-// Add Route
-app.get('/excuses/add', function(req, res){
-    res.render('add_excuse', {
-        title: 'Lisa uus vabandus'
-    });
-});
-
-// Add Submit POST Route
-app.post('/excuses/add', function(req, res){
-    let excuse = new Excuse();
-    excuse.title = req.body.title;
-    excuse.author = req.body.author;
-    excuse.body = req.body.body;
-
-    excuse.save(function(err){
-        if(err){
-            console.log(err);
-            return;
-        } else {
-            res.redirect('/');
-        }
-    });
-});
-
-// Load Edit Form
-app.get('/excuses/edit/:id', function(req, res){
-    Excuse.findById(req.params.id, function(err, excuse){
-        res.render('edit_excuse', {
-            title: 'Muuda vabandust',
-            excuse: excuse
-        });
-    })
-});
-
-// Update Submit POST Route
-app.post('/excuses/edit/:id', function(req, res){
-    let excuse = {};
-    excuse.title = req.body.title;
-    excuse.author = req.body.author;
-    excuse.body = req.body.body;
-
-    let query = {_id:req.params.id}
-
-    Excuse.update(query, excuse, function(err){
-        if(err){
-            console.log(err);
-            return;
-        } else {
-            res.redirect('/');
-        }
-    });
-});
-
-// Deleting
-app.delete('/excuses/:id', function(req, res){
-    let query = {_id:req.params.id}
-
-    Excuse.remove(query, function(err){
-        if(err){
-            console.log(err);
-        }
-        res.send('Success');
-    });
-})
+// Route Files
+let excuses = require('./routes/excuses');
+app.use('/excuses', excuses)
 
 // Start server
 app.listen(3000, function(){
