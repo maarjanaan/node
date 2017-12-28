@@ -80,6 +80,47 @@ app.post('/excuses/add', function(req, res){
     });
 });
 
+// Load Edit Form
+app.get('/excuses/edit/:id', function(req, res){
+    Excuse.findById(req.params.id, function(err, excuse){
+        res.render('edit_excuse', {
+            title: 'Muuda vabandust',
+            excuse: excuse
+        });
+    })
+});
+
+// Update Submit POST Route
+app.post('/excuses/edit/:id', function(req, res){
+    let excuse = {};
+    excuse.title = req.body.title;
+    excuse.author = req.body.author;
+    excuse.body = req.body.body;
+
+    let query = {_id:req.params.id}
+
+    Excuse.update(query, excuse, function(err){
+        if(err){
+            console.log(err);
+            return;
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+// Deleting
+app.delete('/excuses/:id', function(req, res){
+    let query = {_id:req.params.id}
+
+    Excuse.remove(query, function(err){
+        if(err){
+            console.log(err);
+        }
+        res.send('Success');
+    });
+})
+
 // Start server
 app.listen(3000, function(){
     console.log('Server started on port 3000..');
