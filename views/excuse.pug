@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    h1= excuse.title
+    h5 Autor #{excuse.author}
+    p= excuse.body
+    hr
+    a.btn.btn-default(href='/excuses/edit/'+excuse._id) Muuda

@@ -26,9 +26,12 @@ let Excuse = require('./models/excuse');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// BodyPARSE middleware
+// BodyPARSE Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// Set Public Folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Home Route
 app.get('/', function(req, res){
@@ -42,6 +45,15 @@ app.get('/', function(req, res){
             });
         }
     });
+});
+
+// Get Single Excuse
+app.get('/excuse/:id', function(req, res){
+    Excuse.findById(req.params.id, function(err, excuse){
+        res.render('excuse', {
+            excuse: excuse
+        });
+    })
 });
 
 // Add Route

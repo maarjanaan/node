@@ -2,6 +2,7 @@ extends layout
 
 block content
     h1 #{title}
-    ul
+    ul.list-group
         each excuse, i in excuses
-            li= excuse.title
+            li.list-group-item
+                a(href="/excuse/"+excuse._id)= excuse.title
