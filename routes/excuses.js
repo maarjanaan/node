@@ -86,7 +86,7 @@ router.delete('/:id', function(req, res){
 })
 
 // Get Single Excuse
-router.get('/excuse/:id', function(req, res){
+router.get('/:id', function(req, res){
     Excuse.findById(req.params.id, function(err, excuse){
         res.render('excuse', {
             excuse: excuse
