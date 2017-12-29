@@ -3,9 +3,10 @@ const router = express.Router();
 
 // Bring in Models
 let Excuse = require('../models/excuse');
+let User = require('../models/user');
 
 // Add Route
-router.get('/add', function(req, res){
+router.get('/add', ensureAuthenticated, function(req, res){
     res.render('add_excuse', {
         title: 'Lisa uus vabandus'
     });
@@ -14,7 +15,6 @@ router.get('/add', function(req, res){
 // Add Submit POST Route
 router.post('/add', function(req, res){
     req.checkBody('title', 'Pealkiri on kohustuslik').notEmpty();
-    req.checkBody('author', 'Autor on kohustuslik').notEmpty();
     req.checkBody('body', 'Sisu on kohustuslik').notEmpty();
 
     // Get Errors
@@ -28,15 +28,14 @@ router.post('/add', function(req, res){
     } else {
         let excuse = new Excuse();
         excuse.title = req.body.title;
-        excuse.author = req.body.author;
+        excuse.author = req.user._id;
         excuse.body = req.body.body;
-        
         excuse.save(function(err){
             if(err){
                 console.log(err);
                 return;
             } else {
-                req.flash('success', 'Artikkel lisatud');
+                req.flash('success', 'Vabandus lisatud');
                 res.redirect('/');
             }
         });
@@ -44,13 +43,17 @@ router.post('/add', function(req, res){
 });
 
 // Load Edit Form
-router.get('/edit/:id', function(req, res){
+router.get('/edit/:id', ensureAuthenticated, function(req, res){
     Excuse.findById(req.params.id, function(err, excuse){
+        if(excuse.author != req.user._id){
+            req.flash('danger', 'See ei ole sinu vabandus ju!');
+            res.redirect('/');
+        }
         res.render('edit_excuse', {
             title: 'Muuda vabandust',
             excuse: excuse
         });
-    })
+    });
 });
 
 // Update Submit POST Route
@@ -67,7 +70,7 @@ router.post('/edit/:id', function(req, res){
             console.log(err);
             return;
         } else {
-            req.flash('success', 'Artikkel muudetud');
+            req.flash('success', 'Vabandus muudetud');
             res.redirect('/');
         }
     });
@@ -75,23 +78,45 @@ router.post('/edit/:id', function(req, res){
 
 // Deleting
 router.delete('/:id', function(req, res){
+    if(!req.user._id){
+        res.status(500).send();
+    }
     let query = {_id:req.params.id}
 
-    Excuse.remove(query, function(err){
-        if(err){
-            console.log(err);
+    Excuse.findById(req.params.id, function(err, excuse){
+        if(excuse.author != req.user._id){
+            res.status(500).send();
+        } else {
+            Excuse.remove(query, function(err){
+                if(err){
+                    console.log(err);
+                }
+                res.send('Success');
+            });
         }
-        res.send('Success');
     });
-})
+});
 
 // Get Single Excuse
 router.get('/:id', function(req, res){
     Excuse.findById(req.params.id, function(err, excuse){
-        res.render('excuse', {
-            excuse: excuse
+        User.findById(excuse.author, function(err, user){
+            res.render('excuse', {
+                excuse: excuse,
+                author: user.name
+            });
         });
-    })
+    });
 });
+
+// Access control
+function ensureAuthenticated(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    } else {
+        req.flash('danger', 'Palun logi sisse');
+        res.redirect('/users/login');
+    }
+}
 
 module.exports = router;

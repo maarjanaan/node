@@ -18,10 +18,9 @@ html
                     a.navbar-brand(href='/') Vabanduste generaator
                 #navbar.collapse.navbar-collapse
                     ul.nav.navbar-nav
-                        li
-                            a(href='/') Kodu
-                        li
-                            a(href='/excuses/add') Lisa vabandus
+                        if user
+                            li
+                                a(href='/excuses/add') Lisa vabandus
                     ul.nav.navbar-nav.navbar-right
                         if user
                             li
