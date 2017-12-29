@@ -22,6 +22,15 @@ html
                             a(href='/') Kodu
                         li
                             a(href='/excuses/add') Lisa vabandus
+                    ul.nav.navbar-nav.navbar-right
+                        if user
+                            li
+                                a(href='/users/logout') Logi välja
+                        else
+                            li
+                                a(href='/users/add') Registreeru
+                            li
+                                a(href='/users/login') Logi sisse
         .container
             != messages('message', locals)
             if errors
