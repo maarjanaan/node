@@ -83,7 +83,10 @@ app.get('/', function(req, res){
 
 // Route Files
 let excuses = require('./routes/excuses');
-app.use('/excuses', excuses)
+app.use('/excuses', excuses);
+
+let users = require('./routes/users');
+app.use('/users', users);
 
 // Start server
 app.listen(3000, function(){
