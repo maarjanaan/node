@@ -5,6 +5,20 @@ const router = express.Router();
 let Excuse = require('../models/excuse');
 let User = require('../models/user');
 
+//Excuses Route
+router.get('/', function(req, res){
+    Excuse.find({}, function(err, excuses){
+        if(err){
+            console.log(err);
+        } else {
+            res.render('excuses', {
+                title: 'Vabandused',
+                excuses: excuses
+            });
+        }
+    });
+});
+
 // Add Route
 router.get('/add', ensureAuthenticated, function(req, res){
     res.render('add_excuse', {
@@ -14,8 +28,8 @@ router.get('/add', ensureAuthenticated, function(req, res){
 
 // Add Submit POST Route
 router.post('/add', function(req, res){
-    req.checkBody('title', 'Pealkiri on kohustuslik').notEmpty();
-    req.checkBody('body', 'Sisu on kohustuslik').notEmpty();
+    req.checkBody('title', 'Vabandus on kohustuslik').notEmpty();
+    req.checkBody('body', 'Täpsustus on kohustuslik').notEmpty();
 
     // Get Errors
     let errors = req.validationErrors();
@@ -36,7 +50,7 @@ router.post('/add', function(req, res){
                 return;
             } else {
                 req.flash('success', 'Vabandus lisatud');
-                res.redirect('/');
+                res.redirect('/excuses');
             }
         });
     }
@@ -71,7 +85,7 @@ router.post('/edit/:id', function(req, res){
             return;
         } else {
             req.flash('success', 'Vabandus muudetud');
-            res.redirect('/');
+            res.redirect('/excuses');
         }
     });
 });

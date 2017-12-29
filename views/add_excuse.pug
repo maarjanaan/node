@@ -4,10 +4,10 @@ block content
     h1 #{title}
     form(method='POST', action='/excuses/add')
         #form-group
-            label Pealkiri:
+            label Vabandus:
             input.form-control(name='title', type="text")
         #form-group
-            label Sisu:
+            label Täpsustus:
             textarea.form-control(name='body')
         br
         input.btn.btn-primary(type='submit', value='Lisa vabandus')

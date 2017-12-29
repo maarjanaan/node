@@ -1,8 +1,7 @@
 extends layout
 
 block content
-    h1 #{title}
-    ul.list-group
-        each excuse, i in excuses
-            li.list-group-item
-                a(href="/excuses/"+excuse._id)= excuse.title
+    h2 Siin on üks rändom vabandus
+    br
+    a.btn.btn-danger.delete-excuse(href='/') Genereeri uus vabandus
+    br

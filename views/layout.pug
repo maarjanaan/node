@@ -18,6 +18,8 @@ html
                     a.navbar-brand(href='/') Vabanduste generaator
                 #navbar.collapse.navbar-collapse
                     ul.nav.navbar-nav
+                        li
+                            a(href='/excuses') Vabandused
                         if user
                             li
                                 a(href='/excuses/add') Lisa vabandus
@@ -39,7 +41,7 @@ html
             br
             hr
             footer
-                p Copyright &copy; 2017
+                p Kui endal head ideed otsas, siis aitab Vabanduste Generaator &copy; 2017
         script(src='/bower_components/jquery/dist/jquery.js')
         script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
         script(src='/js/main.js')
