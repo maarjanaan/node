@@ -69,4 +69,10 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
+router.get('/logout', function(req, res){
+    req.logout();
+    req.flash('success', 'Oled välja logitud');
+    res.redirect('/users/login');
+});
+
 module.exports = router;
