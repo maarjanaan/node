@@ -111,18 +111,6 @@ router.delete('/:id', function(req, res){
     });
 });
 
-//Random Excuse Route
-router.get('/random', function(req, res){
-    let excuses = Excuse.find({}, function(err, excuses){
-        if(err){
-            console.log(err);
-        } else {
-            let randomExcuse = parseInt(Math.random() * excuses.length);
-            res.send(excuses[randomExcuse]);
-        }
-    });
-});
-
 // Get Single Excuse
 router.get('/:id', function(req, res){
     Excuse.findById(req.params.id, function(err, excuse){

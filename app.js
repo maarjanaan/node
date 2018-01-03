@@ -86,9 +86,11 @@ app.get('/', function(req, res){
         if(err){
             console.log(err);
         } else {
+            let randomExcuse = parseInt(Math.random() * excuses.length);
             res.render('index', {
                 title: 'Vabandused',
-                excuses: excuses
+                excuses: excuses,
+                randomExcuse: excuses[randomExcuse].title
             });
         }
     });
