@@ -1,11 +1,12 @@
 extends layout
 
 block content
-    h1= excuse.title
-    h5 Autor #{author}
-    p= excuse.body
-    hr
-    if user
-        if user.id ==excuse.author
-            a.btn.btn-default(href='/excuses/edit/'+excuse._id) Muuda
-            a.btn.btn-danger.delete-excuse(href='#', data-id=excuse._id) Kustuta
+    if excuse
+        h1= excuse.title
+        h5 Autor #{author}
+        p= excuse.body
+        hr
+        if user
+            if user.id ==excuse.author
+                a.btn.btn-default(href='/excuses/edit/'+excuse._id) Muuda
+                a.btn.btn-danger.delete-excuse(href='#', data-id=excuse._id) Kustuta

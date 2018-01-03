@@ -74,7 +74,6 @@ router.get('/edit/:id', ensureAuthenticated, function(req, res){
 router.post('/edit/:id', function(req, res){
     let excuse = {};
     excuse.title = req.body.title;
-    excuse.author = req.body.author;
     excuse.body = req.body.body;
 
     let query = {_id:req.params.id}
