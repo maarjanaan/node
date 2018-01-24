@@ -7,8 +7,11 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const config = require('./config/database');
+const Promise = require('bluebird');
 
-mongoose.connect(config.database);
+mongoose.Promise = Promise;
+
+mongoose.connect(config.database, { useMongoClient: true });
 let db = mongoose.connection;
 
 // Check connection
@@ -90,7 +93,7 @@ app.get('/', function(req, res){
             res.render('index', {
                 title: 'Vabandused',
                 excuses: excuses,
-                randomExcuse: excuses[randomExcuse].title
+                randomExcuse: randomExcuse ? excuses[randomExcuse].title : 'Praegu pole veel ühtegi vabandust sisestatud'
             });
         }
     });
