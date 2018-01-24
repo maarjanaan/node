@@ -58,8 +58,9 @@ router.post('/add', function(req, res){
 
 // Load Edit Form
 router.get('/edit/:id', ensureAuthenticated, function(req, res){
-    Excuse.findById(req.params.id, function(err, excuse){
-        if(excuse.author != req.user._id){
+    Excuse.findById({_id: req.params.id}, function(err, excuse){
+        const isAuthorOwner = excuse.author.equals(req.user._id);
+        if(!isAuthorOwner){
             req.flash('danger', 'See ei ole sinu vabandus ju!');
             res.redirect('/');
         }
@@ -96,8 +97,9 @@ router.delete('/:id', function(req, res){
     }
     let query = {_id:req.params.id}
 
-    Excuse.findById(req.params.id, function(err, excuse){
-        if(excuse.author != req.user._id){
+    Excuse.findById({_id: req.params.id}, function(err, excuse){
+        const isAuthorOwner = excuse.author.equals(req.user._id);
+        if(!isAuthorOwner){
             res.status(500).send();
         } else {
             Excuse.remove(query, function(err){

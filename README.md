@@ -19,3 +19,10 @@ https://www.youtube.com/watch?v=U8XF6AFGqlc
 https://www.youtube.com/watch?v=IPV2Z3f-WMk
 https://www.youtube.com/playlist?list=PLillGF-RfqbYRpji8t4SxUkMxfowG4Kqp
 https://www.youtube.com/watch?v=l5AXcXAP4r8
+
+
+NB! To get the app running:
+$ npm install
+$ npm install bower
+$ bower install bootstrap#3.3.7
+$ nodemon
