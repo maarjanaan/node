@@ -96,7 +96,7 @@ router.delete('/:id', function(req, res){
         res.status(500).send();
     }
     let query = {_id:req.params.id}
-
+     
     Excuse.findById({_id: req.params.id}, function(err, excuse){
         const isAuthorOwner = excuse.author.equals(req.user._id);
         if(!isAuthorOwner){
@@ -114,13 +114,18 @@ router.delete('/:id', function(req, res){
 
 // Get Single Excuse
 router.get('/:id', function(req, res){
-    Excuse.findById(req.params.id, function(err, excuse){
-        User.findById(excuse.author, function(err, user){
+    Excuse
+        .findById(req.params.id)
+        .populate({ path: 'author', select: 'name' })
+        .exec(function(err, excuse) {
+            if (err) {
+                return console.log(err);
+            }
+            const { author } = excuse;
             res.render('excuse', {
                 excuse: excuse,
-                author: user.name
+                author: author.name
             });
-        });
     });
 });
 

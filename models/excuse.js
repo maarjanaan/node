@@ -16,4 +16,5 @@ let excuseSchema = mongoose.Schema({
     }
 });
 
-let Excuse = module.exports = mongoose.model('Excuse', excuseSchema);
+let Excuse = mongoose.model('Excuse', excuseSchema);
+module.exports = Excuse;

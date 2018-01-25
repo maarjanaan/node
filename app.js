@@ -93,7 +93,7 @@ app.get('/', function(req, res){
             res.render('index', {
                 title: 'Vabandused',
                 excuses: excuses,
-                randomExcuse: randomExcuse ? excuses[randomExcuse].title : 'Praegu pole veel ühtegi vabandust sisestatud'
+                randomExcuse: excuses.length > 0 ? excuses[randomExcuse].title : 'Ei ole'
             });
         }
     });
